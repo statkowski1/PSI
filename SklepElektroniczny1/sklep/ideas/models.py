@@ -16,8 +16,9 @@ class sklep_elektroniczny(models.Model):
 
 class produkt(models.Model):
     nazwa = models.CharField(max_length=45)
-    cena = models.DecimalField(max_digits=10, decimal_places=10)
+    cena = models.DecimalField(max_digits=10, decimal_places=2)
     producent = models.CharField(max_length=45)
+    rodzaj = models.CharField(max_length=45)
 
 class magazyn(models.Model):
     kraj = models.CharField(max_length=45)
@@ -43,3 +44,7 @@ class dostepnosc(models.Model):
     magazyn_id_magazynu = models.ForeignKey(magazyn, on_delete=models.CASCADE)
     produkt_id_produktu = models.ForeignKey(produkt, on_delete=models.CASCADE)
     sklep_elektroniczny_id_sklepu = models.ForeignKey(sklep_elektroniczny, on_delete=models.CASCADE)
+
+class produkt_has_tranzakcja(models.Model):
+    tranzakcja_id_tranzakcji = models.ForeignKey(tranzakcja, on_delete=models.CASCADE)
+    produkt_id_produktu = models.ForeignKey(produkt, on_delete=models.CASCADE)
