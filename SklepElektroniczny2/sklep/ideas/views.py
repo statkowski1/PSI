@@ -82,9 +82,9 @@ class tranzakcjaList(generics.ListCreateAPIView):
     queryset = tranzakcja.objects.all()
     serializer_class = tranzakcjaSerializer
     name = 'tranzakcja-list'
-    filterset_fields = ['data_tranzakcji', 'koszt_tranzakcji', 'klient_id_klienta', 'sklep_elektroniczny_id_sklepu']
+    filterset_fields = ['data_tranzakcji', 'koszt_tranzakcji', 'id_klienta', 'id_sklepu_elektronicznego']
     search_fields = ['data_tranzakcji', 'koszt_tranzakcji']
-    ordering_fields = ['sklep_elektroniczny_id_sklepu', 'data_tranzakcji', 'koszt_tranzakcji']
+    ordering_fields = ['id_sklepu_elektronicznego', 'data_tranzakcji', 'koszt_tranzakcji']
 
 class tranzakcjaDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = tranzakcja.objects.all()
@@ -95,9 +95,9 @@ class dostepnoscList(generics.ListCreateAPIView):
     queryset = dostepnosc.objects.all()
     serializer_class = dostepnoscSerializer
     name = 'dostepnosc-list'
-    filterset_fields = ['dostepnosc', 'produkt_id_produktu']
-    search_fields = ['produkt_id_produktu', '$dostepnosc']
-    ordering_fields = ['dostepnosc', 'produkt_id_produktu']
+    filterset_fields = ['dostepnosc', 'id_produktu']
+    search_fields = ['id_produktu', '$dostepnosc']
+    ordering_fields = ['dostepnosc', 'id_produktu']
 
 class dostepnoscDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = dostepnosc.objects.all()
@@ -108,7 +108,7 @@ class produkt_has_tranzakcjaList(generics.ListCreateAPIView):
     queryset = produkt_has_tranzakcja.objects.all()
     serializer_class = produkt_has_tranzakcjaSerializer
     name = 'produkt_has_tranzakcja-list'
-    ordering_fields = ['tranzakcja_id_tranzakcji']
+    ordering_fields = ['id_tranzakcji']
 
 class produkt_has_tranzakcjaDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = produkt_has_tranzakcja.objects.all()

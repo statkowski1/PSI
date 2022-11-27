@@ -2,6 +2,7 @@ from django.db import models
 
 # Create your models here.
 class klient(models.Model):
+    id_klienta = models.IntegerField()
     imie = models.CharField(max_length=45)
     nazwisko = models.CharField(max_length=45)
     adres_zamieszkania = models.CharField(max_length=45)
@@ -15,6 +16,7 @@ class klient(models.Model):
         return self.imie + ' ' + self.nazwisko
 
 class produkt(models.Model):
+    id_produktu = models.IntegerField()
     nazwa = models.CharField(max_length=45)
     cena = models.DecimalField(max_digits=10, decimal_places=2)
     producent = models.CharField(max_length=45)
@@ -25,6 +27,7 @@ class produkt(models.Model):
         return self.nazwa
 
 class sklep_elektroniczny(models.Model):
+    id_sklepu_elektronicznego = models.IntegerField()
     kraj = models.CharField(max_length=45)
     miasto = models.CharField(max_length=45)
     ulica = models.CharField(max_length=45)
@@ -34,6 +37,7 @@ class sklep_elektroniczny(models.Model):
         return self.miasto+' '+self.ulica
 
 class magazyn(models.Model):
+    id_magazynu = models.IntegerField()
     kraj = models.CharField(max_length=45)
     miasto = models.CharField(max_length=45)
     ulica = models.CharField(max_length=45)
@@ -43,31 +47,33 @@ class magazyn(models.Model):
         return self.miasto+' '+self.ulica
 
 class tranzakcja(models.Model):
-    kod_tranzakcji = models.CharField(max_length=90)
+    id_tranzakcji = models.IntegerField()
     data_tranzakcji = models.DateTimeField()
     koszt_tranzakcji = models.DecimalField(max_digits=10, decimal_places=10)
-    nazwisko_klienta = models.ForeignKey(klient, related_name='tranzakcje', on_delete=models.CASCADE)
-    ulica_sklepu = models.ForeignKey(sklep_elektroniczny, related_name='tranzakcje', on_delete=models.CASCADE)
-    class Meta:
-        ordering = ('kod_tranzakcji',)
-    def __str__(self):
-        return self.kod_tranzakcji
+    id_klienta = models.ForeignKey(klient, related_name='tranzakcje', on_delete=models.CASCADE)
+    id_sklepu_elektronicznego = models.ForeignKey(sklep_elektroniczny, related_name='tranzakcje', on_delete=models.CASCADE)
 
 class dostepnosc(models.Model):
-    class yes_or_not(models.TextChoices):
-        YES = 'YES'
-        NOT = 'NOT'
-    class sklep_lub_magazyn(models.TextChoices):
-        SKLEP = 'S'
-        MAGAZYN = 'M'
-    dostepnosc = models.CharField(max_length=3, choices=yes_or_not.choices, default=yes_or_not.NOT)
+    # class yes_or_not(models.TextChoices):
+    #     YES = 'YES'
+    #     NOT = 'NOT'
+    # class sklep_lub_magazyn(models.TextChoices):
+    #     SKLEP = 'SKLEP'
+    #     MAGAZYN = 'MAGAZYN'
+    YES = 'Y'
+    NOT = 'N'
+    yes_or_not = ((YES, 'YES'), (NOT, 'NOT'),)
+    SKLEP = 'S'
+    MAGAZYN = 'M'
+    sklep_lub_magazyn = ((SKLEP, 'SKLEP'), (MAGAZYN, 'MAGAZYN'),)
+    dostepnosc = models.CharField(max_length=3, choices=yes_or_not, default=NOT)
     ilosc = models.IntegerField()
-    sklep_czy_magazyn = models.CharField(max_length=1, choices=sklep_lub_magazyn.choices, default=sklep_lub_magazyn.SKLEP)
-    magazyn_ulica = models.ForeignKey(magazyn, related_name='dostepnosci', on_delete=models.CASCADE, blank=True, null=True)
-    nazwa_produktu = models.ForeignKey(produkt, related_name='dostepnosci', on_delete=models.CASCADE)
-    sklep_elektroniczny_ulica = models.ForeignKey(sklep_elektroniczny, related_name='dostepnosci', on_delete=models.CASCADE, blank=True, null=True)
+    sklep_czy_magazyn = models.CharField(max_length=7, choices=sklep_lub_magazyn, default=SKLEP)
+    id_magazynu = models.ForeignKey(magazyn, related_name='dostepnosci', on_delete=models.CASCADE, blank=True, null=True)
+    id_produktu = models.ForeignKey(produkt, related_name='dostepnosci', on_delete=models.CASCADE)
+    id_sklepu_elektronicznego = models.ForeignKey(sklep_elektroniczny, related_name='dostepnosci', on_delete=models.CASCADE, blank=True, null=True)
 
 class produkt_has_tranzakcja(models.Model):
-    nazwa_produktu = models.ForeignKey(produkt, related_name='produktHasTranzakcja', on_delete=models.CASCADE)
-    kod_tranzakcji = models.ForeignKey(tranzakcja, related_name='produktHasTranzakcja', on_delete=models.CASCADE)
+    id_produktu = models.ForeignKey(produkt, related_name='produktHasTranzakcja', on_delete=models.CASCADE)
+    id_tranzakcji = models.ForeignKey(tranzakcja, related_name='produktHasTranzakcja', on_delete=models.CASCADE)
 
